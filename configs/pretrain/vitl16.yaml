@@ -1,6 +1,6 @@
 app: vjepa
 nodes: 16
-tasks_per_node: 8
+tasks_per_node: 1
 folder: /Users/mannawarhussain/Desktop/Mannawar/iitp/outputs/vid-output
 data:
   dataset_type: VideoDataset
@@ -13,10 +13,10 @@ data:
   decode_one_clip: true
   batch_size: 1
   num_clips: 1
-  num_frames: 16
+  num_frames: 8
   tubelet_size: 2
-  sampling_rate: 4
-  crop_size: 224
+  sampling_rate: 2
+  crop_size: 112
   patch_size: 16
   pin_mem: true
   num_workers: 0
@@ -24,6 +24,9 @@ data:
   clip_duration: null
   fps: 1
 data_aug:
+  decode_one_clip: true
+  prefetch_factor: 2
+  persistent_workers: false
   auto_augment: false
   motion_shift: false
   random_resize_aspect_ratio:
@@ -70,24 +73,24 @@ meta:
   seed: 234
   eval_freq: 100
   use_sdpa: true
-  dtype: bfloat16
+  dtype: fp32
 model:
-  model_name: vit_large
-  pred_depth: 12
-  pred_embed_dim: 384
+  model_name: vit_small
+  pred_depth: 4
+  pred_embed_dim: 192
   uniform_power: true
   use_mask_tokens: true
   zero_init_mask_tokens: true
 optimization:
-  ipe: 300
+  ipe: 50
   ipe_scale: 1.25
   clip_grad: 10.0
   weight_decay: 0.04
   final_weight_decay: 0.4
-  epochs: 300
-  warmup: 40
+  epochs: 5
+  warmup: 1
   start_lr: 0.0002
-  lr: 0.000625
+  lr: 0.0005
   final_lr: 1.0e-06
   ema:
   - 0.998
