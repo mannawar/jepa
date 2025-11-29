@@ -4,7 +4,7 @@ tasks_per_node: 1
 folder: /Users/mannawarhussain/Desktop/Mannawar/iitp/outputs/vid-output
 data:
   dataset_type: VideoDataset
-  datasets: ['/Users/mannawarhussain/Desktop/my_video_dataset.csv']
+  datasets: ['/Users/mannawarhussain/Desktop/my_video_dataset1.csv']
   dataset_fpcs: [4]
 
 #    - /your_path_to_kinetics710_csv_file_index.csv
