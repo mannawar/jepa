@@ -96,8 +96,19 @@ def load_checkpoint(
     scaler,
     is_anneal=False,
 ):
-    logger.info(f"Loading checkpoint from {r_path}")
-    checkpoint = robust_checkpoint_loader(r_path, map_location=torch.device("cpu"))
+    if not r_path:  # empty string or None
+        logger.info("No checkpoint provided — starting from scratch.")
+        checkpoint = {
+            "epoch": 0,
+            "encoder": encoder.state_dict(),
+            "predictor": predictor.state_dict(),
+            "target_encoder": target_encoder.state_dict() if target_encoder else None,
+            "opt": opt.state_dict(),
+            "scaler": scaler.state_dict() if scaler else None,
+        }
+    else:
+        logger.info(f"Loading checkpoint from {r_path}")
+        checkpoint = robust_checkpoint_loader(r_path, map_location=torch.device("cpu"))
 
     epoch = 0
     if not is_anneal:
@@ -115,7 +126,6 @@ def load_checkpoint(
 
     # -- loading target_encoder
     if target_encoder is not None:
-        print(list(checkpoint.keys()))
         pretrained_dict = checkpoint["target_encoder"]
         msg = target_encoder.load_state_dict(pretrained_dict)
         logger.info(f"loaded pretrained target encoder from epoch {epoch} with msg: {msg}")
@@ -128,14 +138,58 @@ def load_checkpoint(
     logger.info(f"read-path: {r_path}")
     del checkpoint
 
-    return (
-        encoder,
-        predictor,
-        target_encoder,
-        opt,
-        scaler,
-        epoch,
-    )
+    return encoder, predictor, target_encoder, opt, scaler, epoch
+
+
+# def load_checkpoint(
+#     r_path,
+#     encoder,
+#     predictor,
+#     target_encoder,
+#     opt,
+#     scaler,
+#     is_anneal=False,
+# ):
+#     logger.info(f"Loading checkpoint from {r_path}")
+#     checkpoint = robust_checkpoint_loader(r_path, map_location=torch.device("cpu"))
+#
+#     epoch = 0
+#     if not is_anneal:
+#         epoch = checkpoint["epoch"]
+#
+#     # -- loading encoder
+#     pretrained_dict = checkpoint["encoder"]
+#     msg = encoder.load_state_dict(pretrained_dict)
+#     logger.info(f"loaded pretrained encoder from epoch {epoch} with msg: {msg}")
+#
+#     # -- loading predictor
+#     pretrained_dict = checkpoint["predictor"]
+#     msg = predictor.load_state_dict(pretrained_dict)
+#     logger.info(f"loaded pretrained predictor from epoch {epoch} with msg: {msg}")
+#
+#     # -- loading target_encoder
+#     if target_encoder is not None:
+#         print(list(checkpoint.keys()))
+#         pretrained_dict = checkpoint["target_encoder"]
+#         msg = target_encoder.load_state_dict(pretrained_dict)
+#         logger.info(f"loaded pretrained target encoder from epoch {epoch} with msg: {msg}")
+#
+#     # -- loading optimizer
+#     opt.load_state_dict(checkpoint["opt"])
+#     if scaler is not None:
+#         scaler.load_state_dict(checkpoint["scaler"])
+#     logger.info(f"loaded optimizers from epoch {epoch}")
+#     logger.info(f"read-path: {r_path}")
+#     del checkpoint
+#
+#     return (
+#         encoder,
+#         predictor,
+#         target_encoder,
+#         opt,
+#         scaler,
+#         epoch,
+#     )
 
 
 def init_video_model(

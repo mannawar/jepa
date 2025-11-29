@@ -289,9 +289,21 @@ def main(args, resume_preempt=False):
         betas=betas,
         eps=eps,
     )
-    encoder = DistributedDataParallel(encoder, static_graph=True)
-    predictor = DistributedDataParallel(predictor, static_graph=False, find_unused_parameters=True)
-    target_encoder = DistributedDataParallel(target_encoder)
+    # encoder = DistributedDataParallel(encoder, static_graph=True)
+    distributed = args.get("meta", {}).get("distributed", False)
+
+    if distributed:
+        # Multi-GPU / distributed training
+        encoder = DistributedDataParallel(encoder, static_graph=True)
+        predictor = DistributedDataParallel(predictor, static_graph=False, find_unused_parameters=True)
+        target_encoder = DistributedDataParallel(target_encoder)
+    else:
+        # CPU / single-process: skip DDP
+        encoder = encoder
+        predictor = predictor
+        target_encoder = target_encoder
+
+    # Make sure target_encoder parameters are not trainable
     for p in target_encoder.parameters():
         p.requires_grad = False
 

@@ -1,0 +1,61 @@
+app: vjepa
+folder: ./output_test
+data:
+  dataset_type: videodataset
+  datasets: ['./dummy']
+  fake_dataset: true
+  batch_size: 1
+  crop_size: 64
+  patch_size: 16
+  dataset_fpcs: [4]
+  tubelet_size: 2
+  fps: 1
+  num_frames: 4
+  num_workers: 0
+  persistent_workers: false
+  pin_mem: false
+data_aug:
+  auto_augment: false
+  motion_shift: false
+  random_resize_aspect_ratio: [0.75, 1.33]
+  random_resize_scale: [0.3, 1.0]
+  reprob: 0.0
+loss:
+  loss_exp: 2.0
+mask:
+- aspect_ratio: [0.75, 1.5]
+  full_complement: false
+  max_keep: null
+  max_temporal_keep: 1.0
+  num_blocks: 2
+  spatial_scale: [0.7, 0.7]
+  temporal_scale: [1.0, 1.0]
+meta:
+  dtype: float32
+  seed: 0
+  load_checkpoint: false
+  save_every_freq: 0
+  distributed: false
+  resume_checkpoint: ""
+model:
+  model_name: vit_small
+  pred_depth: 1
+  pred_embed_dim: 128
+  pred_num_heads: 8
+  uniform_power: false
+  use_activation_checkpointing: false
+  use_mask_tokens: true
+  zero_init_mask_tokens: true
+  use_rope: false
+  use_silu: false
+  use_pred_silu: false
+  wide_silu: true
+optimization:
+  ema: [0.99, 0.999]
+  epochs: 1
+  final_lr: 1e-4
+  final_weight_decay: 0.05
+  lr: 1e-3
+  start_lr: 1e-3
+  warmup: 0
+  weight_decay: 0.05

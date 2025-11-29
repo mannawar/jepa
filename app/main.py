@@ -19,7 +19,9 @@ parser.add_argument(
     "--devices",
     type=str,
     nargs="+",
-    default=["cuda:0", "cuda:1", "cuda:2", "cuda:3", "cuda:4", "cuda:5", "cuda:6", "cuda:7"],
+    # default=["cuda:0", "cuda:1", "cuda:2", "cuda:3", "cuda:4", "cuda:5", "cuda:6", "cuda:7"],
+    default=["cpu"],
+
     help="which devices to use on local machine",
 )
 parser.add_argument(
@@ -76,7 +78,8 @@ def process_main(rank, fname, world_size, devices):
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.debugmode:
-        process_main(rank=0, fname=args.fname, world_size=1, devices=["cuda:0"])
+        # process_main(rank=0, fname=args.fname, world_size=1, devices=["cuda:0"])
+        process_main(rank=0, fname=args.fname, world_size=1, devices=["cpu"])
     else:
         num_gpus = len(args.devices)
         mp.set_start_method("spawn")
