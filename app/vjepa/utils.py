@@ -226,6 +226,13 @@ def init_video_model(
         use_rope=use_rope,
     )
     encoder = MultiSeqWrapper(encoder)
+
+    # --- NEW PATCH FOR EMBEDDING EXTRACTION ---
+    # If pred_depth is None or 0, do NOT build predictor
+    if pred_depth in [None, 0]:
+        return encoder, None
+    # ------------------------------------------
+
     predictor = vit_pred.__dict__["vit_predictor"](
         img_size=crop_size,
         use_mask_tokens=use_mask_tokens,

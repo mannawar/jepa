@@ -5,22 +5,24 @@ folder: /Users/mannawarhussain/Desktop/Mannawar/iitp/outputs/ufc-output
 
 meta:
   dtype: fp32
+  seed: 234
+  use_sdpa: true
   load_checkpoint: true
   read_checkpoint: /Users/mannawarhussain/Desktop/Mannawar/iitp/outputs/vid-output/latest.pt
 
 data:
-  datasets: ['/Users/mannawarhussain/Desktop/Mannawar/iitp/Datasets/csvs/target/ucf101_raw.csv']
-  dataset_type: VideoDataset
-  dataset_fpcs: [1]
+  dataset_fpcs: [4]
   batch_size: 1
-  num_frames: 8
-  sampling_rate: 2
   crop_size: 112
-  patch_size: 16
+  num_frames: 8
+  fps: 1
+  sampling_rate: 2
   tubelet_size: 2
+  patch_size: 16
   decode_one_clip: true
+  num_clips: 1
+  filter_short_videos: false
   num_workers: 0
-  pin_mem: true
 
 data_aug:
   decode_one_clip: true
@@ -38,13 +40,13 @@ loss:
 
 
 model:
-  model_name: vit_large
+  model_name: vit_small
+  pred_depth: 4
+  pred_embed_dim: 192
   uniform_power: true
   use_mask_tokens: true
-  zero_init_mask_tokens: false
-
-  pred_depth: 0
-  pred_embed_dim: 0
+  num_mask_tokens: 1
+  zero_init_mask_tokens: true
 
 optimization:
   epochs: 1
